@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+	<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Week 1</title>
+		<script type="text/javascript" src="babylon.custom.js"></script>
+		<link rel="stylesheet" type="text/css" href="style_canvas.css"/>
+	</head>
+	<body>
+		<canvas id="renderCanvas"></canvas>
+		<script>
+		var canvas, engine, scene, camera, light, box;
+			document.addEventListener("DOMContentLoaded", function(){
+				//get canvas
+				canvas = document.getElementById("renderCanvas");
+				//create babylon engine
+				engine = new BABYLON.Engine(canvas, true);
+				//create scene
+				scene = new BABYLON.Scene(engine);
+				//create FreeCamera
+				camera = new BABYLON.FreeCamera("camera", new BABYLON.Vector3(0, 4, -10), scene);
+				//create ArcRotateCamera
+				//camera = new BABYLON.ArcRotateCamera("Camera", 0, 0, 10, new BABYLON.Vector3(0, 0, 0), scene);
+				//camera.setPosition(new BABYLON.Vector3(0, 0, 20));
+				//camera.attachControl(canvas, true);
+
+				camera.setTarget(new BABYLON.Vector3(0, 0, 0));
+				camera.attachControl(canvas);
+				//create light
+				light = new BABYLON.HemisphericLight("hLight", new BABYLON.Vector3(0, 8, 0), scene);
+
+				var mat = new BABYLON.StandardMaterial("material", scene);
+				//mat.diffuseColor= new BABYLON.Color3(1, 0, 0);
+				//mat.specularColor= new BABYLON.Color3(0, 1, 0);
+				mat.diffuseTexture = new BABYLON.Texture("texture.jpg", scene);
+				mat.specularTexture = new BABYLON.Texture("texture3.jpg", scene);
+				mat.specularPower= 25;
+
+
+				// diffuse: basic color of texture
+				// specular: highlight
+				// emissive: color or texture as if self lit
+				// ambient: color or texture lit by environmental background lighting and requires ambient color of scene to be set
+				//scene.ambientColor = new BABYLON.Color3(1, 1, 1);
+
+				mat.ambientColor = new BABYLON.Color3(0.23, 0.98, 0.53);
+
+				//transparency
+				mat.alpha= 1;
+
+				box = new BABYLON.Mesh.CreateBox("box", 1.0, scene);
+
+				box.position = new BABYLON.Vector3(0, 0, 0);
+
+				box.material=mat;
+
+				document.addEventListener("keydown", onDocumentKeyDown, false);
+					function onDocumentKeyDown(event){
+						var KeyCode = event.which;
+
+						if(KeyCode == 38){
+							box.position.y = box.position.y + 0.05;
+						}else if(KeyCode == 40){
+							box.position.y = box.position.y - 0.05;
+						}else if(KeyCode ==39){
+							box.position.x = box.position.x + 0.05;
+						}else if(KeyCode == 37){
+							box.position.x = box.position.x - 0.05;
+						} 
+					}
+
+
+				engine.runRenderLoop(function(){
+					//box.position.x = 0;
+					scene.render();
+				});
+			});
+		</script>
+	</body>
+	</html>
